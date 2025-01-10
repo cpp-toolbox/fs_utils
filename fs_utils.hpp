@@ -6,15 +6,14 @@
 #include <vector>
 #include <regex>
 
-std::string get_directory_from_filepath(const std::string &filepath);
-std::string get_parent_directory(const std::string &current_dir);
-std::string get_home_directory();
+std::filesystem::path get_directory_from_filepath(const std::filesystem::path &filepath);
+std::filesystem::path get_parent_directory(const std::filesystem::path &current_dir);
+std::filesystem::path get_home_directory();
 
-bool is_directory(const std::string path);
-bool has_extension(const std::string &file_path, const std::string extension);
+bool has_extension(const std::filesystem::path &file_path, const std::string &extension);
 
-std::vector<std::string> list_files_and_directories(const std::string &path, bool include_hidden = false);
-std::vector<std::string> list_files_in_directory(const std::string &path);
-std::vector<std::string> list_files_matching_regex(const std::string &path, const std::regex &pattern);
+std::vector<std::filesystem::path> list_files_and_directories(const std::filesystem::path &path, bool include_hidden = false);
+std::vector<std::filesystem::path> list_files_in_directory(const std::filesystem::path &path);
+std::vector<std::filesystem::path> list_files_matching_regex(const std::filesystem::path &path, const std::regex &pattern);
 
 #endif // FS_UTILS_HPP
