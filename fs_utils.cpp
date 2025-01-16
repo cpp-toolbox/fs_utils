@@ -1,5 +1,45 @@
 #include "fs_utils.hpp"
 #include <iostream>
+#include <iostream>
+#include <unordered_set>
+
+std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir,
+                                                     const std::vector<std::string> &ignore_dirs, int limit) {
+    std::vector<std::filesystem::path> files;
+    std::unordered_set<std::string> ignore_set(ignore_dirs.begin(), ignore_dirs.end());
+    size_t count = 0;
+
+    try {
+        std::filesystem::recursive_directory_iterator dir_iter(
+            base_dir, std::filesystem::directory_options::skip_permission_denied);
+
+        while (dir_iter != std::filesystem::end(dir_iter)) {
+            const auto &entry = *dir_iter;
+
+            if (entry.is_directory()) {
+                auto dir_name = entry.path().filename().string();
+                std::cout << "Looking at: " << dir_name << std::endl;
+
+                if (ignore_set.find(dir_name) != ignore_set.end()) {
+                    std::cout << "Skipping: " << dir_name << " and its subdirectories" << std::endl;
+                    dir_iter.disable_recursion_pending(); // Skip this directory and its subdirectories
+                }
+            } else if (entry.is_regular_file()) {
+                files.push_back(entry.path());
+                ++count;
+                if (count >= limit) {
+                    break;
+                }
+            }
+
+            ++dir_iter; // Move to the next entry
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "Error while iterating directory: " << e.what() << std::endl;
+    }
+
+    return files;
+}
 
 std::filesystem::path get_directory_from_filepath(const std::filesystem::path &filepath) {
     return filepath.parent_path();
@@ -61,13 +101,15 @@ std::vector<std::filesystem::path> list_files_in_directory(const std::filesystem
 }
 
 // Function to list all files in a directory that match a regex pattern
-std::vector<std::filesystem::path> list_files_matching_regex(const std::filesystem::path &path, const std::regex &pattern) {
-    std::vector<std::filesystem::path> all_files = list_files_in_directory(path);  // This function should return std::vector<std::filesystem::path>
+std::vector<std::filesystem::path> list_files_matching_regex(const std::filesystem::path &path,
+                                                             const std::regex &pattern) {
+    std::vector<std::filesystem::path> all_files =
+        list_files_in_directory(path); // This function should return std::vector<std::filesystem::path>
     std::vector<std::filesystem::path> matching_files;
 
     // Iterate through all files and match with regex pattern
     for (const std::filesystem::path &file : all_files) {
-        if (std::regex_search(file.string(), pattern)) {  // Use .string() to compare with regex (regex works on strings)
+        if (std::regex_search(file.string(), pattern)) { // Use .string() to compare with regex (regex works on strings)
             matching_files.push_back(file);
         }
     }
