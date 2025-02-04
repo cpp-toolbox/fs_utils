@@ -2,6 +2,21 @@
 #include <iostream>
 #include <iostream>
 #include <unordered_set>
+#include <cstdlib> // for std::getenv
+
+std::filesystem::path expand_tilde(const std::filesystem::path &path) {
+    if (path.empty() || path.string()[0] != '~') {
+        return path;
+    }
+
+    const char *home_dir = std::getenv("HOME");
+    if (home_dir) {
+        std::string expanded_path = home_dir + std::string(path.string().substr(1)); // Remove '~' and append to HOME
+        return std::filesystem::path(expanded_path);
+    }
+
+    return path; // Return the original path if HOME environment variable is not found
+}
 
 std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir,
                                                      const std::vector<std::string> &ignore_dirs, int limit) {
