@@ -25,7 +25,13 @@ std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir
                     dir_iter.disable_recursion_pending(); // Skip this directory and its subdirectories
                 }
             } else if (entry.is_regular_file()) {
-                files.push_back(entry.path());
+                std::string relative_path = entry.path().string();
+                if (relative_path.rfind("./", 0) == 0) {     // Check if it starts with "./"
+                    relative_path = relative_path.substr(2); // Remove the "./"
+                }
+
+                std::cout << "adding: " << relative_path << std::endl;
+                files.push_back(relative_path);
                 ++count;
                 if (count >= limit) {
                     break;
