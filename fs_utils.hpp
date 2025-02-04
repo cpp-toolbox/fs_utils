@@ -20,4 +20,6 @@ std::vector<std::filesystem::path> list_files_matching_regex(const std::filesyst
 std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir,
                                                      const std::vector<std::string> &ignore_dirs, int limit = 1000);
 
+bool file_exists_in_same_dir(const std::filesystem::path &file_path, const std::filesystem::path &target_file_name);
+
 #endif // FS_UTILS_HPP

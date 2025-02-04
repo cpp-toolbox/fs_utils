@@ -122,3 +122,38 @@ std::vector<std::filesystem::path> list_files_matching_regex(const std::filesyst
 
     return matching_files;
 }
+
+bool file_exists_in_same_dir(const std::filesystem::path &file_path, const std::filesystem::path &target_file_name) {
+    try {
+        // Check if the given file exists
+        if (!std::filesystem::exists(file_path)) {
+            std::cerr << "The specified file does not exist: " << file_path << std::endl;
+            return false;
+        }
+
+        // Ensure it's a regular file
+        if (!std::filesystem::is_regular_file(file_path)) {
+            std::cerr << "The specified path is not a regular file: " << file_path << std::endl;
+            return false;
+        }
+
+        // Get the directory of the given file
+        std::filesystem::path directory = file_path.parent_path();
+
+        // Construct the full path to the target file
+        std::filesystem::path target_file_path = directory / target_file_name;
+
+        // Check if the target file exists
+        if (std::filesystem::exists(target_file_path)) {
+            return true; // Target file exists
+        } else {
+            return false; // Target file does not exist
+        }
+    } catch (const std::filesystem::filesystem_error &e) {
+        std::cerr << "Filesystem error: " << e.what() << std::endl;
+        return false;
+    } catch (const std::exception &e) {
+        std::cerr << "General error: " << e.what() << std::endl;
+        return false;
+    }
+}
