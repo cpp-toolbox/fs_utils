@@ -33,10 +33,10 @@ std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir
 
             if (entry.is_directory()) {
                 auto dir_name = entry.path().filename().string();
-                std::cout << "Looking at: " << dir_name << std::endl;
+                /*std::cout << "Looking at: " << dir_name << std::endl;*/
 
                 if (ignore_set.find(dir_name) != ignore_set.end()) {
-                    std::cout << "Skipping: " << dir_name << " and its subdirectories" << std::endl;
+                    /*std::cout << "Skipping: " << dir_name << " and its subdirectories" << std::endl;*/
                     dir_iter.disable_recursion_pending(); // Skip this directory and its subdirectories
                 }
             } else if (entry.is_regular_file()) {
@@ -45,7 +45,7 @@ std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir
                     relative_path = relative_path.substr(2); // Remove the "./"
                 }
 
-                std::cout << "adding: " << relative_path << std::endl;
+                /*std::cout << "adding: " << relative_path << std::endl;*/
                 files.push_back(relative_path);
                 ++count;
                 if (count >= limit) {
