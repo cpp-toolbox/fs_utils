@@ -6,6 +6,7 @@
 #include <vector>
 #include <regex>
 
+std::string normalize_path_for_os(const std::string &path);
 std::filesystem::path expand_tilde(const std::filesystem::path &path);
 std::filesystem::path get_directory_from_filepath(const std::filesystem::path &filepath);
 std::filesystem::path get_parent_directory(const std::filesystem::path &current_dir);

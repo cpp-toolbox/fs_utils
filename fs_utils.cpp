@@ -4,6 +4,19 @@
 #include <unordered_set>
 #include <cstdlib> // for std::getenv
 
+std::string normalize_path_for_os(const std::string &path) {
+    std::filesystem::path fp(path);
+
+#if defined(_WIN32) || defined(_WIN64)
+    fp.make_preferred(); // Converts slashes to backslashes on Windows
+    return fp.string();  // Windows case
+#else
+    std::string normalized = fp.string();
+    std::replace(normalized.begin(), normalized.end(), '\\', '/');
+    return normalized;
+#endif
+}
+
 std::filesystem::path expand_tilde(const std::filesystem::path &path) {
     if (path.empty() || path.string()[0] != '~') {
         return path;
