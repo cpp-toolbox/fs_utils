@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <cstdlib> // for std::getenv
 
-std::string normalize_path_for_os(const std::string &path) {
+std::string normalize_path_for_os(const std::string &path) {	
     std::filesystem::path fp(path);
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -16,6 +16,11 @@ std::string normalize_path_for_os(const std::string &path) {
     return normalized;
 #endif
 }
+
+std::string get_path_delimiter() {
+    return std::string(1, std::filesystem::path::preferred_separator);
+}
+
 
 std::filesystem::path expand_tilde(const std::filesystem::path &path) {
     if (path.empty() || path.string()[0] != '~') {
@@ -86,6 +91,12 @@ bool has_extension(const std::filesystem::path &file_path, const std::string &ex
     // Compare extensions (case insensitive)
     return (file_extension == extension ||
             (file_extension.size() > 1 && file_extension[0] == '.' && file_extension.substr(1) == extension));
+}
+
+std::string get_containing_directory(const std::string &filepath) {
+    std::filesystem::path path_obj(filepath);
+    std::filesystem::path directory = path_obj.parent_path();
+    return normalize_path_for_os(directory.string());
 }
 
 std::filesystem::path get_parent_directory(const std::filesystem::path &current_dir) {
