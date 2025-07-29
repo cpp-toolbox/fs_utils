@@ -1,10 +1,11 @@
 #include "fs_utils.hpp"
 #include <iostream>
-#include <iostream>
+#include <fstream>
 #include <unordered_set>
-#include <cstdlib> // for std::getenv
 
-std::string normalize_path_for_os(const std::string &path) {	
+namespace fs_utils {
+
+std::string normalize_path_for_os(const std::string &path) {
     std::filesystem::path fp(path);
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -17,10 +18,7 @@ std::string normalize_path_for_os(const std::string &path) {
 #endif
 }
 
-std::string get_path_delimiter() {
-    return std::string(1, std::filesystem::path::preferred_separator);
-}
-
+std::string get_path_delimiter() { return std::string(1, std::filesystem::path::preferred_separator); }
 
 std::filesystem::path expand_tilde(const std::filesystem::path &path) {
     if (path.empty() || path.string()[0] != '~') {
@@ -196,3 +194,43 @@ bool file_exists_in_same_dir(const std::filesystem::path &file_path, const std::
         return false;
     }
 }
+
+bool create_directory(const std::filesystem::path &dir_path) {
+    // create any necessary parent directories
+    try {
+        if (!std::filesystem::exists(dir_path)) {
+            return std::filesystem::create_directories(dir_path);
+        }
+        return true; // Directory already exists
+    } catch (const std::filesystem::filesystem_error &e) {
+        std::cerr << "Error creating directory: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool create_file_with_content(const std::filesystem::path &file_path, const std::string &content) {
+    try {
+        std::filesystem::path dir = file_path.parent_path();
+        if (!fs_utils::create_directory(dir)) {
+            return false;
+        }
+
+        std::ofstream ofs(file_path);
+        if (!ofs) {
+            std::cerr << "Failed to open file for writing: " << file_path << std::endl;
+            return false;
+        }
+
+        ofs << content;
+        return true;
+    } catch (const std::exception &e) {
+        std::cerr << "Error writing file: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+std::string get_directory_of_file(const std::string &file_path) {
+    std::filesystem::path path(file_path);
+    return normalize_path_for_os(path.parent_path().string());
+}
+} // namespace fs_utils

@@ -6,6 +6,8 @@
 #include <vector>
 #include <regex>
 
+namespace fs_utils {
+
 std::string normalize_path_for_os(const std::string &path);
 std::string get_path_delimiter();
 std::filesystem::path expand_tilde(const std::filesystem::path &path);
@@ -25,5 +27,11 @@ std::vector<std::filesystem::path> rec_get_all_files(const std::string &base_dir
                                                      const std::vector<std::string> &ignore_dirs, int limit = 1000);
 
 bool file_exists_in_same_dir(const std::filesystem::path &file_path, const std::filesystem::path &target_file_name);
+
+bool create_directory(const std::filesystem::path &dir_path);
+bool create_file_with_content(const std::filesystem::path &file_path, const std::string &content);
+std::string get_directory_of_file(const std::string &file_path);
+
+} // namespace fs_utils
 
 #endif // FS_UTILS_HPP
