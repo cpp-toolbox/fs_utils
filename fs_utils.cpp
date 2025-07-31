@@ -233,4 +233,14 @@ std::string get_directory_of_file(const std::string &file_path) {
     std::filesystem::path path(file_path);
     return normalize_path_for_os(path.parent_path().string());
 }
+
+std::filesystem::path get_relative_path(const std::filesystem::path &source, const std::filesystem::path &target) {
+    try {
+        return std::filesystem::relative(target, source);
+    } catch (const std::filesystem::filesystem_error &e) {
+        // Optional: handle errors (e.g., paths not on the same root)
+        return target;
+    }
+}
+
 } // namespace fs_utils

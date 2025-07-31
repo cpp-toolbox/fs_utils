@@ -32,6 +32,8 @@ bool create_directory(const std::filesystem::path &dir_path);
 bool create_file_with_content(const std::filesystem::path &file_path, const std::string &content);
 std::string get_directory_of_file(const std::string &file_path);
 
+std::filesystem::path get_relative_path(const std::filesystem::path &source, const std::filesystem::path &target);
+
 } // namespace fs_utils
 
 #endif // FS_UTILS_HPP
