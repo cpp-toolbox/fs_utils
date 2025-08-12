@@ -97,6 +97,10 @@ std::string get_containing_directory(const std::string &filepath) {
     return normalize_path_for_os(directory.string());
 }
 
+std::string get_filename_from_path(const std::string &path_str) {
+    return std::filesystem::path(path_str).filename().string();
+}
+
 std::filesystem::path get_parent_directory(const std::filesystem::path &current_dir) {
     // Check if the current directory is the root directory
     if (current_dir == current_dir.root_path()) {

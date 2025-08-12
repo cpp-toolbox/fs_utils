@@ -13,6 +13,7 @@ std::string get_path_delimiter();
 std::filesystem::path expand_tilde(const std::filesystem::path &path);
 std::filesystem::path get_directory_from_filepath(const std::filesystem::path &filepath);
 std::string get_containing_directory(const std::string &filepath);
+std::string get_filename_from_path(const std::string &path_str);
 std::filesystem::path get_parent_directory(const std::filesystem::path &current_dir);
 std::filesystem::path get_home_directory();
 
