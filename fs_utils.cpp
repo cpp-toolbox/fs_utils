@@ -5,6 +5,8 @@
 
 namespace fs_utils {
 
+bool path_exists(const std::string &path) { return std::filesystem::exists(std::filesystem::path(path)); }
+
 std::string normalize_path_for_os(const std::string &path) {
     std::filesystem::path fp(path);
 

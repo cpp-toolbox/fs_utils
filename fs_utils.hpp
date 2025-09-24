@@ -8,6 +8,7 @@
 
 namespace fs_utils {
 
+bool path_exists(const std::string &path);
 std::string normalize_path_for_os(const std::string &path);
 std::string get_path_delimiter();
 std::filesystem::path expand_tilde(const std::filesystem::path &path);
