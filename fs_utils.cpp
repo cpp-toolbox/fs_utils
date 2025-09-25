@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_set>
+#include <regex>
 
 namespace fs_utils {
 
@@ -151,14 +152,17 @@ std::vector<std::filesystem::path> list_files_in_directory(const std::filesystem
 
 // Function to list all files in a directory that match a regex pattern
 std::vector<std::filesystem::path> list_files_matching_regex(const std::filesystem::path &path,
-                                                             const std::regex &pattern) {
+                                                             const std::string &pattern_str) {
     std::vector<std::filesystem::path> all_files =
         list_files_in_directory(path); // This function should return std::vector<std::filesystem::path>
     std::vector<std::filesystem::path> matching_files;
 
+    // Compile the regex from the string
+    std::regex pattern(pattern_str);
+
     // Iterate through all files and match with regex pattern
     for (const std::filesystem::path &file : all_files) {
-        if (std::regex_search(file.string(), pattern)) { // Use .string() to compare with regex (regex works on strings)
+        if (std::regex_search(file.string(), pattern)) {
             matching_files.push_back(file);
         }
     }
